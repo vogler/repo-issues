@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# dependencies: ag, jq, curl, git
+
+me=$(git config github.user)
+
+# TODO support grep etc.?
+ag 'https://github.com/[a-zA-Z0-9./-_]+/issues/\d*'
+
+all_urls=$(ag 'https://github.com/[a-zA-Z0-9./-_]+/issues/\d*' -o | cut -d':' -f3-)
+urls=$(echo "$all_urls" | awk '!seen[$0]++') # remove non-consecutive duplicates (uniq) without sorting (sort -u)
+
+# 60 requests per hour w/o auth: https://docs.github.com/en/rest/guides/getting-started-with-the-rest-api#authentication
+
+echo "------"
+
+for url in $urls; do
+  issue=$(echo $url | cut -d'/' -f4-)
+  json=$(curl -s https://api.github.com/repos/$issue)
+  title=$(echo $json | jq .title)
+  user=$(echo $json | jq .user.login)
+  echo "$issue $user $title"
+done
