@@ -19,5 +19,6 @@ for url in $urls; do
   json=$(curl -s https://api.github.com/repos/$issue)
   title=$(echo $json | jq .title)
   user=$(echo $json | jq .user.login)
-  echo "$issue $user $title"
+  state=$(echo $json | jq .state)
+  echo "$issue $state $user $title"
 done
