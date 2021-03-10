@@ -1,5 +1,7 @@
 # repo-issues
 
+Dependencies: [ag](https://github.com/ggreer/the_silver_searcher), [jq](https://github.com/stedolan/jq), curl, git
+
 Running `./repo-issues` lists all issues mentioned in the current repository. Currently only github is supported but open to PRs.
 
 The first group shows issues created by the current `git config github.user`.
